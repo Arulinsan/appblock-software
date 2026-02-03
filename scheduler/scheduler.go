@@ -73,9 +73,12 @@ func (s *Scheduler) checkProductiveTime() {
 	wasProductive := s.isProductive
 	s.isProductive = s.config.IsProductiveTime()
 	
+	// Debug: Always log current check result
+	currentTime := time.Now().Format("15:04")
+	utils.LogInfo("Productive time check at %s: enabled=%v, isProductive=%v", currentTime, s.config.Enabled, s.isProductive)
+	
 	// Log state changes with timestamp
 	if wasProductive != s.isProductive {
-		currentTime := time.Now().Format("15:04")
 		if s.isProductive {
 			utils.LogInfo("Entered productive time at %s - blocking now active", currentTime)
 		} else {
@@ -101,6 +104,14 @@ func (s *Scheduler) SetStatusCallback(callback func(bool)) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.statusCallback = callback
+}
+
+// UpdateConfig updates the scheduler configuration
+func (s *Scheduler) UpdateConfig(cfg *config.Config) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.config = cfg
+	utils.LogInfo("Scheduler config updated")
 }
 
 // ForceCheck forces an immediate check of productive time

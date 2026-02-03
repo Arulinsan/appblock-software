@@ -65,8 +65,11 @@ func (b *Blocker) Stop() {
 
 // scanAndBlock scans for blocked processes and terminates them
 func (b *Blocker) scanAndBlock() {
+	isProductive := b.scheduler.IsProductive()
+	utils.LogInfo("Scan triggered - IsProductive: %v, Config.Enabled: %v", isProductive, b.config.Enabled)
+	
 	// Only block if we're in productive time
-	if !b.scheduler.IsProductive() {
+	if !isProductive {
 		return
 	}
 

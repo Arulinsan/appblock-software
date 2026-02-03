@@ -95,6 +95,7 @@ func main() {
 				utils.LogError("Failed to reload config: %v", err)
 			} else {
 				cfg = config.Get()
+				sched.UpdateConfig(cfg)
 				block.UpdateConfig(cfg)
 				sched.ForceCheck()
 			}
@@ -103,6 +104,9 @@ func main() {
 			// On reload config - update all components
 			utils.LogInfo("Reloading all components with new config...")
 			cfg = config.Get()
+			
+			// Update scheduler with new config
+			sched.UpdateConfig(cfg)
 			
 			// Update blocker with new config
 			block.UpdateConfig(cfg)
