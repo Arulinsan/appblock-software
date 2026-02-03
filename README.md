@@ -30,7 +30,15 @@ GEMINI_API_KEY=AIzaSy_Your_API_Key_Here
 appblock.exe
 ```
 
-Icon muncul di **system tray** (pojok kanan bawah).
+**Penting:**
+- Aplikasi akan berjalan di **system tray** (pojok kanan bawah, dekat jam)
+- Icon APPBlock akan muncul di tray
+- Window settings akan terbuka otomatis saat pertama kali dijalankan
+- **Jangan klik berkali-kali!** Aplikasi sudah berjalan di background
+
+**Cara cek aplikasi berjalan:**
+- Lihat icon di system tray
+- Klik panah atas (^) di tray jika icon tersembunyi
 
 ### 3. Buka Settings
 

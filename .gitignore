@@ -18,6 +18,7 @@ rsrc.syso
 config.json
 app.log
 *.log
+*.lock
 
 # Environment
 .env

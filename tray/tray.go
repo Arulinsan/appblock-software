@@ -160,6 +160,11 @@ func (a *App) handleSettings() {
 	}()
 }
 
+// OpenSettings opens the settings window (public method for external calls)
+func (a *App) OpenSettings() {
+	a.handleSettings()
+}
+
 // handleReloadConfig reloads configuration from file
 func (a *App) handleReloadConfig() {
 	utils.LogInfo("Reloading configuration...")
