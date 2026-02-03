@@ -130,30 +130,27 @@ func main() {
 
 	utils.LogInfo("APPBlock started successfully - Running in system tray")
 
-	// Show startup notification
-	go func() {
-		// Check if this is first run (config.json tidak ada blocklist)
-		isFirstRun := len(cfg.Blocklist) == 0
+	// Check if this is first run (config.json tidak ada blocklist)
+	isFirstRun := len(cfg.Blocklist) == 0
+	
+	if isFirstRun {
+		// Set flag to auto-open settings when tray is ready
+		trayApp.SetOpenSettingsOnReady(true)
 		
-		if isFirstRun {
-			// First run - show welcome message dan auto-open settings
-			popup.ShowInfo("Selamat Datang di APPBlock! 🚀",
-				"APPBlock sekarang aktif di system tray.\n\n"+
-				"Setup cepat:\n"+
-				"1. Atur aplikasi yang ingin diblokir\n"+
-				"2. Pilih jam produktif\n"+
-				"3. Pilih AI personality\n\n"+
-				"Window Settings akan terbuka otomatis...")
-			
-			// Auto-open settings for first run
-			trayApp.OpenSettings()
-		} else {
-			// Regular startup - show simple notification
-			popup.ShowInfo("APPBlock Aktif ✅",
-				"APPBlock berjalan di system tray.\n\n"+
-				"Right-click icon untuk mengatur.")
-		}
-	}()
+		// Show welcome notification
+		go popup.ShowInfo("Selamat Datang di APPBlock! 🚀",
+			"APPBlock sekarang aktif di system tray.\n\n"+
+			"Setup cepat:\n"+
+			"1. Atur aplikasi yang ingin diblokir\n"+
+			"2. Pilih jam produktif\n"+
+			"3. Pilih AI personality\n\n"+
+			"Window Settings akan terbuka otomatis...")
+	} else {
+		// Regular startup - show simple notification
+		go popup.ShowInfo("APPBlock Aktif ✅",
+			"APPBlock berjalan di system tray.\n\n"+
+			"Right-click icon untuk mengatur.")
+	}
 
 	// Run system tray (this blocks until quit)
 	trayApp.Start()

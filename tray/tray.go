@@ -24,6 +24,7 @@ type App struct {
 	onToggleEnabled   func()
 	onReloadConfig    func()
 	onQuit            func()
+	openSettingsOnReady bool
 	
 	// Menu items
 	mStatus           *systray.MenuItem
@@ -37,8 +38,9 @@ type App struct {
 // NewApp creates a new tray app
 func NewApp(cfg *config.Config) *App {
 	return &App{
-		config:           cfg,
-		isProductiveTime: false,
+		config:              cfg,
+		isProductiveTime:    false,
+		openSettingsOnReady: false,
 	}
 }
 
@@ -94,6 +96,15 @@ func (a *App) onReady() {
 	a.updateToggleText()
 	a.updateAutostartText()
 	a.updateStatusText()
+	
+	// Auto-open settings if requested (first run)
+	if a.openSettingsOnReady {
+		go func() {
+			// Small delay to ensure tray is fully ready
+			// time.Sleep(500 * time.Millisecond)
+			a.handleSettings()
+		}()
+	}
 
 	// Handle menu clicks
 	go a.handleMenuClicks()
@@ -158,6 +169,11 @@ func (a *App) handleSettings() {
 			utils.LogError("Failed to show settings: %v", err)
 		}
 	}()
+}
+
+// SetOpenSettingsOnReady sets flag to open settings when tray is ready
+func (a *App) SetOpenSettingsOnReady(open bool) {
+	a.openSettingsOnReady = open
 }
 
 // OpenSettings opens the settings window (public method for external calls)
