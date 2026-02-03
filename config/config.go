@@ -31,6 +31,7 @@ type Config struct {
 	TimeWindows           []TimeWindow `json:"time_windows"`
 	Blocklist             []string     `json:"blocklist"`
 	AI                    AIConfig     `json:"ai"`
+	FirstRunCompleted     bool         `json:"first_run_completed"`
 }
 
 var (
@@ -41,22 +42,23 @@ var (
 // Default configuration
 func defaultConfig() *Config {
 	return &Config{
-		Enabled:              true,
-		Autostart:            false,
+		Enabled:              false,
+		Autostart:            true,
 		ScanIntervalSeconds:  5,
 		PopupCooldownSeconds: 60,
 		ActiveDays:           []string{"Mon", "Tue", "Wed", "Thu", "Fri"},
 		TimeWindows: []TimeWindow{
-			{Start: "12:00", End: "13:30"},
-			{Start: "16:00", End: "18:00"},
-			{Start: "20:00", End: "22:00"},
+			{Start: "09:00", End: "12:00"},
+			{Start: "13:00", End: "17:00"},
+			{Start: "19:00", End: "21:00"},
 		},
-		Blocklist: []string{"chrome.exe", "discord.exe", "steam.exe"},
+		Blocklist: []string{"chrome.exe", "discord.exe", "telegram.exe"},
 		AI: AIConfig{
 			Enabled:     true,
-			Personality: "Lembut, suportif, tegas, fokus belajar, bahasa Indonesia",
-			Model:       "gemini-1.5-flash",
+			Personality: "",
+			Model:       "gemini-3-flash-preview",
 		},
+		FirstRunCompleted: false,
 	}
 }
 
@@ -181,5 +183,11 @@ func (c *Config) ToggleEnabled() error {
 // SetAutostart sets autostart value
 func (c *Config) SetAutostart(value bool) error {
 	c.Autostart = value
+	return Save()
+}
+
+// MarkFirstRunCompleted marks the first run as completed
+func (c *Config) MarkFirstRunCompleted() error {
+	c.FirstRunCompleted = true
 	return Save()
 }

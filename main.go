@@ -130,9 +130,9 @@ func main() {
 
 	utils.LogInfo("APPBlock started successfully - Running in system tray")
 
-	// Check if this is first run (config.json tidak ada blocklist atau time windows kosong)
-	isFirstRun := len(cfg.Blocklist) == 0 || len(cfg.TimeWindows) == 0
-	utils.LogInfo("First run check: blocklist=%d, timewindows=%d, isFirstRun=%v", len(cfg.Blocklist), len(cfg.TimeWindows), isFirstRun)
+	// Check if this is first run (FirstRunCompleted flag is false)
+	isFirstRun := !cfg.FirstRunCompleted
+	utils.LogInfo("First run check: FirstRunCompleted=%v, isFirstRun=%v", cfg.FirstRunCompleted, isFirstRun)
 	
 	if isFirstRun {
 		// Set flag to auto-open settings when tray is ready

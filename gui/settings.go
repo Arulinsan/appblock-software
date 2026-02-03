@@ -311,6 +311,9 @@ func ShowSettings(onSave func()) error {
 								return
 							}
 							
+							// Mark first run as completed
+							cfg.MarkFirstRunCompleted()
+							
 							utils.LogInfo("Settings saved via GUI")
 							
 							// Trigger reload callback
