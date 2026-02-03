@@ -6,12 +6,16 @@ import (
 	"appblock/gui"
 	"appblock/popup"
 	"appblock/utils"
+	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/getlantern/systray"
 )
+
+//go:embed icon.ico
+var iconData []byte
 
 // App holds references to application components
 type App struct {
@@ -262,9 +266,15 @@ func (a *App) updateStatusText() {
 }
 
 // getIcon returns the system tray icon
-// Tries to load from icon.ico file next to exe, falls back to embedded icon
+// Uses embedded icon from binary
 func getIcon() []byte {
-	// Try to load icon.ico from same directory as executable
+	// Use embedded icon data
+	if len(iconData) > 0 {
+		utils.LogInfo("Using embedded tray icon (%d bytes)", len(iconData))
+		return iconData
+	}
+	
+	// Fallback: try to load from icon.ico file next to executable
 	exePath, err := os.Executable()
 	if err == nil {
 		exeDir := filepath.Dir(exePath)
@@ -277,7 +287,7 @@ func getIcon() []byte {
 		}
 	}
 	
-	// Fallback to embedded default icon
+	// Last fallback to default icon
 	utils.LogInfo("Using default embedded tray icon")
 	return getDefaultIcon()
 }
