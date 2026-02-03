@@ -148,10 +148,7 @@ Berikan pesan motivasi singkat (maksimal 2-3 kalimat) yang:
 2. Memberikan saran konkret yang bisa dilakukan sekarang
 3. Dalam bahasa Indonesia
 
-Langsung berikan pesannya tanpa tambahan format atau penjelasan lain.
-
-konteks lainnya pengguna adalah seorang programmer yang ingin belajar lebih giat tentang ngoding sebagai software developer
-mau itu mobile dev, web dev, dan backend`, 
+Langsung berikan pesannya tanpa tambahan format atau penjelasan lain.`, 
 		c.personality, blockedApp, currentTime)
 
 	reqBody := GeminiRequest{

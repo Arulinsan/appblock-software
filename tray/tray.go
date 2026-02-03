@@ -162,16 +162,15 @@ func (a *App) handleToggle() {
 func (a *App) handleSettings() {
 	utils.LogInfo("Opening settings window...")
 	
-	go func() {
-		err := gui.ShowSettings(func() {
-			// On save callback - reload config
-			a.handleReloadConfig()
-		})
-		
-		if err != nil {
-			utils.LogError("Failed to show settings: %v", err)
-		}
-	}()
+	// Run in same goroutine to prevent window issues
+	err := gui.ShowSettings(func() {
+		// On save callback - reload config
+		a.handleReloadConfig()
+	})
+	
+	if err != nil {
+		utils.LogError("Failed to show settings: %v", err)
+	}
 }
 
 // SetOpenSettingsOnReady sets flag to open settings when tray is ready
@@ -209,7 +208,7 @@ func (a *App) handleReloadConfig() {
 	a.updateTooltip()
 	
 	utils.LogInfo("Configuration reloaded successfully")
-	go popup.ShowInfo("Config Reloaded ✅", "Configuration has been reloaded!\n\nNew settings are now active.")
+	go popup.ShowInfo("Settings Applied ✅", "Configuration saved and applied!\n\nNew settings are now active.")
 }
 
 // handleToggleAutostart toggles autostart

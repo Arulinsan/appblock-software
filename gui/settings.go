@@ -316,13 +316,13 @@ func ShowSettings(onSave func()) error {
 							
 							utils.LogInfo("Settings saved via GUI")
 							
-							// Trigger reload callback
+							// Close window first
+							mainWindow.Close()
+							
+							// Trigger reload callback (will show reload notification)
 							if onSave != nil {
 								onSave()
 							}
-							
-							walk.MsgBox(mainWindow, "Success", "Settings saved successfully!\n\nClick Reload Config from tray menu to apply changes.", walk.MsgBoxIconInformation)
-							mainWindow.Close()
 						},
 					},
 					PushButton{
