@@ -77,7 +77,8 @@ func ShowSettings(onSave func()) error {
 	// TimeWindow model
 	timeWindowModel = NewTimeWindowModel(cfg.TimeWindows)
 	
-	_, err := MainWindow{
+	// Create and show the window
+	err := MainWindow{
 		AssignTo: &mainWindow,
 		Title:    "APPBlock - Settings",
 		MinSize:  Size{Width: 600, Height: 700},
@@ -330,9 +331,21 @@ func ShowSettings(onSave func()) error {
 				},
 			},
 		},
-	}.Run()
+	}.Create()
 	
-	return err
+	if err != nil {
+		return err
+	}
+	
+	// Bring window to front and activate
+	mainWindow.Show()
+	mainWindow.BringToTop()
+	mainWindow.Activate()
+	
+	// Run the message loop
+	mainWindow.Run()
+	
+	return nil
 }
 
 // TimeWindowModel for ListBox
