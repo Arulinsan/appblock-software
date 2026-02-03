@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/getlantern/systray"
 )
@@ -99,9 +100,11 @@ func (a *App) onReady() {
 	
 	// Auto-open settings if requested (first run)
 	if a.openSettingsOnReady {
+		utils.LogInfo("Auto-opening settings window (first run)...")
 		go func() {
-			// Small delay to ensure tray is fully ready
-			// time.Sleep(500 * time.Millisecond)
+			// Delay to ensure tray is fully ready and visible
+			time.Sleep(1 * time.Second)
+			utils.LogInfo("Triggering settings window...")
 			a.handleSettings()
 		}()
 	}

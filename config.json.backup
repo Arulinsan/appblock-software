@@ -1,0 +1,26 @@
+{
+  "enabled": false,
+  "autostart": true,
+  "scan_interval_seconds": 5,
+  "popup_cooldown_seconds": 60,
+  "active_days": [
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri"
+  ],
+  "time_windows": [],
+  "blocklist": [
+    "steam.exe",
+    "Endfield.exe",
+    "HYP.exe",
+    "launcher_main.exe",
+    "Games.exe"
+  ],
+  "ai": {
+    "enabled": true,
+    "personality": "",
+    "model": "gemini-3-flash-preview"
+  }
+}

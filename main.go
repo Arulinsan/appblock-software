@@ -130,8 +130,9 @@ func main() {
 
 	utils.LogInfo("APPBlock started successfully - Running in system tray")
 
-	// Check if this is first run (config.json tidak ada blocklist)
-	isFirstRun := len(cfg.Blocklist) == 0
+	// Check if this is first run (config.json tidak ada blocklist atau time windows kosong)
+	isFirstRun := len(cfg.Blocklist) == 0 || len(cfg.TimeWindows) == 0
+	utils.LogInfo("First run check: blocklist=%d, timewindows=%d, isFirstRun=%v", len(cfg.Blocklist), len(cfg.TimeWindows), isFirstRun)
 	
 	if isFirstRun {
 		// Set flag to auto-open settings when tray is ready
@@ -174,7 +175,14 @@ func checkSingleInstance() error {
 	lockFile, err = os.OpenFile(lockPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if err != nil {
 		if os.IsExist(err) {
-			return fmt.Errorf("another instance is already running")
+			// Check if process still running, if not delete stale lock
+			os.Remove(lockPath)
+			// Try again
+			lockFile, err = os.OpenFile(lockPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+			if err != nil {
+				return fmt.Errorf("another instance is already running")
+			}
+			return nil
 		}
 		return fmt.Errorf("failed to create lock file: %w", err)
 	}
