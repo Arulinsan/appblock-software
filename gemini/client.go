@@ -52,21 +52,26 @@ type Candidate struct {
 }
 
 // NewClient creates a new Gemini API client
+// If API key not found, returns client with default message mode
 func NewClient(model, personality string) (*Client, error) {
 	apiKey := getAPIKey()
-	if apiKey == "" {
-		return nil, fmt.Errorf("GEMINI_API_KEY not found. Set environment variable or create .env file")
-	}
-
-	return &Client{
+	
+	client := &Client{
 		apiKey:      apiKey,
 		model:       model,
 		personality: personality,
 		httpClient: &http.Client{
 			Timeout: defaultTimeout,
 		},
-		lastMessage: "",
-	}, nil
+		lastMessage: getDefaultMessage(personality),
+	}
+	
+	// If no API key, warn but continue with default messages
+	if apiKey == "" {
+		return client, fmt.Errorf("GEMINI_API_KEY not set - using default messages")
+	}
+
+	return client, nil
 }
 
 // getAPIKey tries to get API key from multiple sources
@@ -105,15 +110,24 @@ func getAPIKey() string {
 }
 
 // GetMotivationalMessage gets a motivational message from Gemini AI
+// Falls back to default message if API not available
 func (c *Client) GetMotivationalMessage(blockedApp string) string {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
+	// If no API key, return default message
+	if c.apiKey == "" {
+		return getDefaultMessage(c.personality)
+	}
+
 	// Try to get message from API
 	message, err := c.fetchMessage(blockedApp)
 	if err != nil {
-		// Return last successful message or default
-		return c.lastMessage
+		// Fallback to last successful message or default
+		if c.lastMessage != "" {
+			return c.lastMessage
+		}
+		return getDefaultMessage(c.personality)
 	}
 
 	// Update last message cache
@@ -200,4 +214,25 @@ func (c *Client) GetLastMessage() string {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	return c.lastMessage
+}
+
+// getDefaultMessage returns a default motivational message based on personality
+func getDefaultMessage(personality string) string {
+	// Parse personality to determine message style
+	lowerPersonality := strings.ToLower(personality)
+	
+	if strings.Contains(lowerPersonality, "programmer") || strings.Contains(lowerPersonality, "developer") {
+		return "⏰ Waktunya fokus coding! Tutup distraksi dan selesaikan task kamu. Debugging bisa lebih smooth kalau fokus penuh!"
+	} else if strings.Contains(lowerPersonality, "student") || strings.Contains(lowerPersonality, "pelajar") {
+		return "📚 Fokus belajar dulu ya! Masa depan kamu ditentukan dari usaha hari ini. Semangat!"
+	} else if strings.Contains(lowerPersonality, "designer") || strings.Contains(lowerPersonality, "creative") {
+		return "🎨 Waktunya berkarya! Fokus ke project kamu. Kreativitas butuh konsentrasi penuh!"
+	} else if strings.Contains(lowerPersonality, "writer") || strings.Contains(lowerPersonality, "content") {
+		return "✍️ Tulis dulu konten kamu! Konsistensi adalah kunci. Fokus menulis sekarang!"
+	} else if strings.Contains(lowerPersonality, "entrepreneur") || strings.Contains(lowerPersonality, "business") {
+		return "💼 Fokus ke bisnis! Goals kamu tidak akan tercapai dengan distraksi. Execute sekarang!"
+	}
+	
+	// Default generic message
+	return "🚀 Fokus sekarang! Singkirkan distraksi dan selesaikan yang penting. You got this!"
 }

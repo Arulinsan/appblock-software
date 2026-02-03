@@ -195,8 +195,11 @@ func ShowSettings(onSave func()) error {
 					GroupBox{
 						Title:  "🤖 AI Personality",
 						Layout: VBox{},
-						Children: []Widget{
-							CheckBox{
+						Children: []Widget{						Label{
+							Text: "ℹ️ Untuk AI: Buat file .env dengan GEMINI_API_KEY=your_key\nTanpa API key = pesan default.",
+							Font: Font{PointSize: 8},
+							TextColor: walk.RGB(100, 100, 100),
+						},							CheckBox{
 								AssignTo: &aiEnabledCheck,
 								Text:     "Enable AI Motivational Messages",
 								Checked:  cfg.AI.Enabled,

@@ -262,9 +262,9 @@ func (a *App) updateStatusText() {
 }
 
 // getIcon returns the system tray icon
-// Tries to load from icon.ico file, falls back to embedded icon
+// Tries to load from icon.ico file next to exe, falls back to embedded icon
 func getIcon() []byte {
-	// Try to load icon from file
+	// Try to load icon.ico from same directory as executable
 	exePath, err := os.Executable()
 	if err == nil {
 		exeDir := filepath.Dir(exePath)
@@ -272,11 +272,13 @@ func getIcon() []byte {
 		
 		data, err := os.ReadFile(iconPath)
 		if err == nil && len(data) > 0 {
+			utils.LogInfo("Loaded tray icon from: %s", iconPath)
 			return data
 		}
 	}
 	
 	// Fallback to embedded default icon
+	utils.LogInfo("Using default embedded tray icon")
 	return getDefaultIcon()
 }
 
