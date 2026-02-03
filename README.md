@@ -6,6 +6,10 @@ Aplikasi Windows yang auto-blokir aplikasi pengganggu (games, sosmed) selama jam
 
 ## Quick Start
 
+**For End Users:**
+
+Download executable dari [GitHub Releases](https://github.com/Arulinsan/appblock-software/releases)
+
 ### 1. Setup API Key
 
 Dapatkan API key gratis:
@@ -103,6 +107,14 @@ echo GEMINI_API_KEY=AIzaSy_Your_Key > .env
 - Pastikan dalam jam produktif
 - Verify process name di Task Manager
 - Status harus "Active" di tray
+
+**Icon tidak muncul?**
+
+```bash
+.\refresh_icon.bat
+```
+
+Atau restart Windows Explorer manual.
 
 **Settings tidak bisa dibuka?**
 
