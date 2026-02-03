@@ -134,15 +134,15 @@ func main() {
 
 	utils.LogInfo("APPBlock started successfully - Running in system tray")
 
-	// Check if this is first run (FirstRunCompleted flag is false)
+	// Always auto-open settings on startup
+	trayApp.SetOpenSettingsOnReady(true)
+	
+	// Check if this is first run for welcome message
 	isFirstRun := !cfg.FirstRunCompleted
 	utils.LogInfo("First run check: FirstRunCompleted=%v, isFirstRun=%v", cfg.FirstRunCompleted, isFirstRun)
 	
 	if isFirstRun {
-		// Set flag to auto-open settings when tray is ready
-		trayApp.SetOpenSettingsOnReady(true)
-		
-		// Show welcome notification
+		// Show welcome notification for first time users
 		go popup.ShowInfo("Selamat Datang di APPBlock! 🚀",
 			"APPBlock sekarang aktif di system tray.\n\n"+
 			"Setup cepat:\n"+
